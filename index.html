@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz de Matemática 7º ano - Prof Valdeck Francisco</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="stage">
+  <header>
+    <div class="brand-group">
+      <div class="title-wrap">
+        <h1>SAEPE 2026 <br/>Matemática 7º ano</h1>
+
+        <p>Prof. Valdeck Francisco</p>
+
+        <p>Escola Erundina Negreiros — GRE Recife Norte</p>
+      </div>
+    </div>
+  </header>
+
+    <div id="quiz-box" class="slide-card">
+
+      <div class="progress">
+        <div class="bar" id="progress-bar"></div>
+      </div>
+
+      <h3 id="question-counter"></h3>
+
+      <h2 id="question"></h2>
+
+      <ul id="options" class="bullets"></ul>
+
+      <button id="next-btn" class="btn">
+        Próxima
+      </button>
+
+    </div>
+
+
+    <div id="result-box" class="slide-card hidden">
+
+      <h2>🎉 Resultado Final</h2>
+
+      <p class="result-score">
+        Você acertou
+        <strong><span id="score"></span></strong> de
+        <strong><span id="total"></span></strong> questões
+      </p>
+
+      <div class="result-progress">
+        <div id="result-bar"></div>
+      </div>
+
+      <p id="result-percent"></p>
+      <p id="result-message"></p>
+
+      <button id="restart-btn" class="btn secondary">
+        Jogar Novamente
+      </button>
+
+    </div>
+
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: `01. Em um campeonato de futebol, o time A tem saldo de -3 gols e o time B tem saldo de -5 gols. Qual time está em melhor situação (maior saldo) e qual o sucessor do saldo do time B?`,
+        options: ["Time A; sucessor é -6.", "Time B; sucessor é -4.", "Time A; sucessor é -4.", "Time B; sucessor é -6."],
+        answer: 2
+      },
+      {
+        question: `02. Altitude: Um helicóptero está a 100m acima do nível do mar (positivo) e um submarino está a 100m abaixo do nível do mar (negativo). Sobre o valor absoluto (módulo) dessas posições, é correto dizer que:`,
+        options: ["O helicóptero está mais longe do nível zero.", "O submarino está mais longe do nível zero.", "Ambos estão à mesma distância do nível zero (módulo igual).", "O módulo do submarino é -100."],
+        answer: 2
+      },
+      {
+        question: `03. Elevador: Um elevador sai do andar 0, desce 2 andares e depois sobe 5. Em qual andar ele parou?`,
+        options: ["-7", "3", "-3", "7"],
+        answer: 1
+      },
+      {
+        question: `04. Potenciação: O professor escreveu (-3)² e -(3²). Quais são os resultados corretos?`,
+        options: ["9 e 9", "-9 e -9", "-9 e 9", "9 e -9"],
+        answer: 3
+      },
+      {
+        question: `05. Luzes de Natal: Um pisca-pisca azul acende a cada 3 segundos e um vermelho a cada 5 segundos. Se acenderem juntos agora, após quantos segundos coincidirão novamente?`,
+        options: ["8 segundos", "10 segundos", "15 segundos", "30 segundos"],
+        answer: 2
+      },
+      {
+        question: `06. Kit de Lanches: Thais tem 12 maçãs e 18 biscoitos. Quer dividir em pacotes iguais com o maior número possível de itens em cada um, sem sobrar nada. Qual o MDC?`,
+        options: ["6", "3", "2", "36"],
+        answer: 0
+      },
+      {
+        question: `07. Primos: Qual dos grupos abaixo contém apenas números primos?`,
+        options: ["2, 3, 5, 9", "2, 3, 5, 7", "1, 2, 3, 5", "4, 6, 8, 10"],
+        answer: 1
+      },
+      {
+        question: `08. Fatoração: Ao decompor o número 36 em fatores primos, encontramos:`,
+        options: ["2 x 3²", "2² x 3", "2² x 3²", "6 x 6"],
+        answer: 2
+      },
+      {
+        question: `09. Tanque de Combustível: O ponteiro do carro marca que o tanque está com 1/4 de combustível. Isso corresponde a qual número decimal?`,
+        options: ["0,4", "0,25", "0,5", "0,14"],
+        answer: 1
+      },
+      {
+        question: `10. Compras: Ester comprou 1,5 kg de carne por R$ 30,00 o quilo. Quanto ela pagou?`,
+        options: ["R$ 45,00", "R$ 31,50", "R$ 60,00", "R$ 40,00"],
+        answer: 0
+      },
+      {
+        question: `11. Reta Numérica: O número racional -1,5 está localizado entre quais números inteiros na reta numérica?`,
+        options: ["Entre 1 e 2", "Entre 0 e -1", "Entre -1 e -2", "Entre -2 e -3"],
+        answer: 2
+      },
+      {
+        question: `12. Divisão de Fração: Se Izabelly tem 1/2 de uma barra de chocolate e quer dividir igualmente para 2 pessoas, quanto cada uma ganhará?`,
+        options: ["1/4 da barra", "1/1 da barra", "2/2 da barra", "1/3 da barra"],
+        answer: 0
+      },
+      {
+        question: `13. O Enigma de x: Pensei em um número x, multipliquei por 3 e subtraí 4. A expressão que representa isso é:`,
+        options: ["x + 3 - 4", "3x - 4", "4 - 3x", "x/3 - 4"],
+        answer: 1
+      },
+      {
+        question: `14. Valor Numérico: Qual o valor de 2x + 10 quando x = -5?`,
+        options: ["20", "0", "-20", "10"],
+        answer: 1
+      },
+      {
+        question: `15. Transferidor: Um ângulo que mede 120 graus é maior que o ângulo reto. Ele é classificado como:`,
+        options: ["Agudo", "Raso", "Obtuso", "Pleno"],
+        answer: 2
+      },
+      {
+        question: `16. Polígonos: Um polígono de 4 lados iguais e 4 ângulos retos é o:`,
+        options: ["Triângulo", "Pentágono", "Trapézio", "Quadrado"],
+        answer: 3
+      },
+      {
+        question: `17. Benjamin tinha R$ -20,00 e depositou R$ 50,00. Qual o novo saldo e sua posição na reta numérica?`,
+        options: ["R$ 70,00 e estará à direita do zero.", "R$ 30,00 e estará à esquerda do zero.", "R$ 30,00 e estará à direita do zero.", "R$ -70,00 e estará à esquerda do zero."],
+        answer: 2
+      },
+      {
+        question: `18. O ônibus A parte a cada 4 horas e o B a cada 6 horas. Depois de quanto tempo eles sairão juntos novamente?`,
+        options: ["10 horas.", "12 horas.", "24 horas.", "2 horas."],
+        answer: 1
+      },
+      {
+        question: `19. Ana Rita comeu 2/8 da pizza e sua irmã Ana Beatriz 3/8. Qual a fração total e o valor decimal dessa comilança?`,
+        options: ["5/8 e 0,625.", "1/8 e 0,125.", "5/16 e 0,312.", "5/8 e 0,5."],
+        answer: 0
+      },
+      {
+        question: `20. Usando a expressão 5 + 2x, quanto um cliente pagará por 3 horas (x = 3) de estacionamento?`,
+        options: ["R$ 21,00", "R$ 10,00", "R$ 11,00", "R$ 13,00"],
+        answer: 2
+      },
+      {
+        question: `21. Um mergulhador está a uma profundidade de -15 metros. Ele decide subir 8 metros em direção à superfície. Qual é a nova posição desse mergulhador?`,
+        options: ["-23 metros", "-7 metros", "7 metros", "-8 metros"],
+        answer: 1
+      },
+      {
+        question: `22. Em uma cidade do Sul, a temperatura era de -3°C pela manhã. Ao meio-dia, a temperatura subiu 10°C. Qual foi a temperatura registrada ao meio-dia?`,
+        options: ["-13°C", "13°C", "7°C", "-7°C"],
+        answer: 2
+      },
+      {
+        question: `23. O valor absoluto (módulo) representa a distância de um número até o zero. Qual é o resultado da soma do módulo de -12 com o simétrico de -5?`,
+        options: ["17", "7", "-17", "-7"],
+        answer: 0
+      },
+      {
+        question: `24. Clarissa resolveu a seguinte operação: (-4) x (-5) + (-10). Qual foi o resultado correto que ela encontrou?`,
+        options: ["-30", "10", "30", "-10"],
+        answer: 1
+      },
+      {
+        question: `25. Dois remédios devem ser tomados em horários diferentes: o Remédio A a cada 6 horas e o Remédio B a cada 8 horas. Se ambos forem tomados juntos agora, daqui a quantas horas eles serão tomados juntos novamente?`,
+        options: ["14 horas", "24 horas", "48 horas", "12 horas"],
+        answer: 1
+      },
+      {
+        question: `26. Uma professora Ana Karla tem 30 balas de morango e 45 balas de uva. Ela quer montar saquinhos iguais com o maior número possível de balas de cada sabor, sem sobrar nada. Quantas balas haverá em cada saquinho (MDC)?`,
+        options: ["5 balas", "10 balas", "15 balas", "90 balas"],
+        answer: 2
+      },
+      {
+        question: `27. Sobre os números primos, qual das afirmações abaixo é a correta?`,
+        options: ["Todos os números ímpares são primos.", "O número 2 é o único número primo par.", "O número 1 é o menor número primo que existe.", "Números primos possuem mais de dois divisores."],
+        answer: 1
+      },
+      {
+        question: `28. A decomposição em fatores primos (fatoração) do número 60 é:`,
+        options: ["2² x 3 x 5", "2 x 3 x 10", "4 x 15", "2 x 3² x 5"],
+        answer: 0
+      },
+      {
+        question: `29. Daniel comprou uma barra de chocolate e comeu 0,4 dela. Que fração da barra ele ainda tem para comer?`,
+        options: ["4/10", "6/10 (ou 3/5)", "1/4", "2/5"],
+        answer: 1
+      },
+      {
+        question: `30. Uma receita de bolo pede 2,5 xícaras de farinha. Se eu quiser fazer metade dessa receita, quanta farinha devo usar?`,
+        options: ["1,25 xícaras", "1,5 xícaras", "1,15 xícaras", "0,75 xícaras"],
+        answer: 0
+      },
+      {
+        question: `31. Qual é o resultado da soma entre as frações 1/2 e 1/4?`,
+        options: ["2/6", "3/4", "1/8", "2/4"],
+        answer: 1
+      },
+      {
+        question: `32. Em uma corrida de 100 metros, Pedro correu 15,25 metros e parou. Quanto falta para ele completar o percurso total?`,
+        options: ["84,75 metros", "85,25 metros", "75,00 metros", "84,25 metros"],
+        answer: 0
+      },
+      {
+        question: `33. A idade de Fabiano é representada por x. O dobro da idade de Fabiano somado com 5 anos é igual a 25. Qual é a expressão algébrica correta para essa situação?`,
+        options: ["x + 5 = 25", "2x + 5 = 25", "2 + x + 5 = 25", "x² + 5 = 25"],
+        answer: 1
+      },
+      {
+        question: `34. Qual é o valor numérico da expressão 3a + 2b para a = 4 e b = 5?`,
+        options: ["14", "22", "20", "25"],
+        answer: 1
+      },
+      {
+        question: `35. Um ângulo que mede exatamente 90 graus é classificado como:`,
+        options: ["Ângulo Agudo", "Ângulo Obtuso", "Ângulo Raso", "Ângulo Reto"],
+        answer: 3
+      },
+      {
+        question: `36. Um polígono que possui 5 lados e 5 ângulos internos é chamado de:`,
+        options: ["Quadrilátero", "Hexágono", "Pentágono", "Triângulo"],
+        answer: 2
+      },
+      {
+        question: `37. Durante o inverno, a temperatura em uma cidade chegou a -3°C pela manhã e subiu para 5°C à tarde. Qual foi a variação de temperatura nesse dia?`,
+        options: ["2°C", "5°C", "8°C", "-8°C"],
+        answer: 2
+      },
+      {
+        question: `38. Dois ônibus passam em um ponto: um a cada 10 minutos e outro a cada 15 minutos. Eles passaram juntos às 8h. Depois de quanto tempo eles voltarão a passar juntos novamente?`,
+        options: ["20 minutos", "25 minutos", "30 minutos", "45 minutos"],
+        answer: 2
+      },
+      {
+        question: `39. Taynara comprou 1/2 de um bolo e depois mais 1/4 do mesmo bolo. Quanto de bolo ela comprou ao todo?`,
+        options: ["2/6", "3/4", "1/6", "1"],
+        answer: 1
+      },
+      {
+        question: `40. Em uma papelaria, o preço de um caderno é representado por x. Se David comprou 3 cadernos, qual expressão representa o valor total pago?`,
+        options: ["x + 3", "x³", "3x", "x ÷ 3"],
+        answer: 2
+      }
+    ];
+
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const nextBtn = document.getElementById("next-btn");
+    const progressBar = document.getElementById("progress-bar");
+
+    const quizBox = document.getElementById("quiz-box");
+    const resultBox = document.getElementById("result-box");
+
+    const scoreEl = document.getElementById("score");
+    const totalEl = document.getElementById("total");
+
+    const restartBtn = document.getElementById("restart-btn");
+
+    const questionCounterEl = document.getElementById("question-counter");
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    totalEl.textContent = questions.length;
+
+    function loadQuestion() {
+
+      const q = questions[currentQuestion];
+
+      questionEl.textContent = q.question;
+
+      optionsEl.innerHTML = "";
+
+      q.options.forEach((opt, i) => {
+
+        const li = document.createElement("li");
+
+        li.textContent = opt;
+
+        li.classList.add("option");
+
+        li.addEventListener("click", () => selectOption(i));
+
+        optionsEl.appendChild(li);
+
+      });
+
+      nextBtn.style.display = "none";
+
+      updateProgress();
+
+      questionCounterEl.textContent =
+        `Questão ${currentQuestion + 1} de ${questions.length}`;
+
+    }
+
+    function selectOption(index) {
+
+      const q = questions[currentQuestion];
+
+      const allOptions = document.querySelectorAll(".option");
+
+      allOptions.forEach((opt, i) => {
+
+        if (i === q.answer) opt.classList.add("correct");
+
+        if (i === index && i !== q.answer) opt.classList.add("wrong");
+
+        opt.style.pointerEvents = "none";
+
+      });
+
+      if (index === q.answer) score++;
+
+      nextBtn.style.display = "block";
+
+    }
+
+    nextBtn.addEventListener("click", () => {
+
+      currentQuestion++;
+
+      if (currentQuestion < questions.length) {
+
+        loadQuestion();
+
+      } else {
+
+        showResult();
+
+      }
+
+    });
+
+    function updateProgress() {
+
+      const pct = ((currentQuestion) / questions.length) * 100;
+
+      progressBar.style.width = pct + "%";
+
+    }
+
+    function showResult() {
+
+      quizBox.classList.add("hidden");
+
+      resultBox.classList.remove("hidden");
+
+      scoreEl.textContent = score;
+
+      const percent = Math.round((score / questions.length) * 100);
+
+      const resultBar = document.getElementById("result-bar");
+
+      const resultPercent = document.getElementById("result-percent");
+
+      const resultMessage = document.getElementById("result-message");
+
+      resultBar.style.width = percent + "%";
+
+      resultPercent.textContent = percent + "% de aproveitamento";
+
+      let msg = "";
+
+      if (percent >= 90) {
+
+        msg = "🏆 Excelente! Você domina o conteúdo!";
+        resultBar.style.background = "#16a34a";
+
+      }
+
+      else if (percent >= 70) {
+
+        msg = "👏 Muito bom! Continue assim!";
+        resultBar.style.background = "#22c55e";
+
+      }
+
+      else if (percent >= 50) {
+
+        msg = "🙂 Resultado razoável. Dá para melhorar!";
+        resultBar.style.background = "#f59e0b";
+
+      }
+
+      else {
+
+        msg = "📚 Você precisa revisar o conteúdo.";
+        resultBar.style.background = "#dc2626";
+
+      }
+
+      resultMessage.textContent = msg;
+
+      progressBar.style.width = "100%";
+
+    }
+
+    restartBtn.addEventListener("click", () => {
+
+      score = 0;
+
+      currentQuestion = 0;
+
+      resultBox.classList.add("hidden");
+
+      quizBox.classList.remove("hidden");
+
+      loadQuestion();
+
+    });
+
+    loadQuestion();
+
+  </script>
+</body>
+</html>
